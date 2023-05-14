@@ -2,11 +2,10 @@
   
 <h1 align="center">
   <p align="center">슬기로운 파이썬 트릭</p>
-  <a href="https://product.kyobobook.co.kr/detail/S000001932753">
+  <a href="https://ebook.insightbook.co.kr/book/72">
     <img width="50%" src="cover.jpg" />
   </a>
 </h1>
-  
   
 <b>댄 베이더 저 · 전석환 역</b></br>
 인사이트 · 2019년 01월 29일 출시</b> 
@@ -22,6 +21,19 @@
 </br>
 
 ## 🚩 정리한 문서 목록
+
+ - [클래스, 클래스 메서드](https://github.com/erectbranch/Python_Trick/tree/master/ch04)
+
+   > is vs ==, \_\_str\_\_ vs \_\_repr\_\_, copy.deepcopy
+
+   > 사용자 예외 클래스, 추상 클래스(ABC)
+
+ - [반복문, 이터레이션](https://github.com/erectbranch/Python_Trick/tree/master/ch06)
+
+   > range(), 불필요한 index 제거하기, enumerate()
+
+   > 딕셔너리 순회, 중첩 딕셔너리 순회, 중첩 딕셔너리 클래스화
+
 
 </br>
 
