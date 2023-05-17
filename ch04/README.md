@@ -1,6 +1,6 @@
 # 4 클래스와 객체 지향 프로그래밍
 
-## 4.1 객체 비교: `is` vs `==`
+## 4.1 객체 비교: is vs ==
 
 비교 연산자 `is`와 `==`의 차이를 알아보자.
 
@@ -28,7 +28,7 @@ a == c   # True
 
 ---
 
-## 4.2 `__str__` vs `__repr__`
+## 4.2 \_\_str\_\_ vs \_\_repr\_\_
 
 Python에서 class를 만들고 `print({객체명})`을 입력 시 memory address가 출력된다.
 
@@ -48,7 +48,7 @@ print(my_car)                   # <__console__.Car object at 0x109b73da0>
 
 ---
 
-### 4.2.1 `__str__`
+### 4.2.1 \_\_str\_\_
 
 우선 `__str__`을 추가한 버전을 보자.
 
@@ -70,7 +70,7 @@ my_car                          # <__console__.Car object at 0x109b73da0>
 
 ---
 
-### 4.2.2 `__repr__`
+### 4.2.2 \_\_repr\_\_
 
 다음은 `__repr__`을 추가한 버전이다.
 
@@ -207,3 +207,62 @@ c = Concrete()                  # TypeError: "Can't instantiate abstract class C
 
 ---
 
+## 4.6 namedtuple
+
+**tuple**은 불변이므로 생성하면 수정할 수 없다.
+
+```python
+tup = ('hello', object(), 42)
+tup             # ('hello', <object object at 0x105e76b70>, 42)
+tup[2] = 23     # "'tuple' object does not support item assignment"
+```
+
+위 예시에서 튜플의 문제점을 알 수 있다. 튜픙른 개별 속성에 이름을 붙일 수 없고, 오로지 정수 index를 써서 데이터에 접근해야 한다. 이러한 문제를 해결하려는 것이 **namedtuple**이다.
+
+```python
+from collections import namedtuple
+Car = namedtuple('Car', 'color mileage')    # Car라는 이름의 namedtuple을 생성한다.
+```
+
+tuple은 tuple인데 'Car'라는 이름의 tuple이 됐다. 그런데 'color mileage'를 space로 구분해서 전달했다. 이는 namedtuple의 factory function이 `split()`을 통해 list로 쪼개주기 때문이다.
+
+```python
+# 이 코드와 동일하다.
+Car = namedtuple('Car', [
+    'color',
+    'mileage'
+    ]
+)
+```
+
+실제로 사용해 보면 왜 편리한지 알 수 있다. 내부적으로는 일반 class와 동일하게 생성되지만, memory 사용량이 일반 클래스보다 적으며 가독성 면에서 효율적이다.
+
+```python
+my_car = Car('red', 3812.4)
+my_car.color        # 'red'
+my_car.mileage      # 3812.4
+
+# 일반 튜플처럼 정수 index로도 접근하거나 내용물을 볼 수 있다.
+my_car[0]           # 'red'
+tuple(my_car)       # ('red', 3812.4)
+print(*my_car)      # red 3812.4 (튜플 풀기)
+```
+
+---
+
+### 4.6.1 namedtuple 상속받기
+
+`._fields` 메서드를 통해 namedtuple도 상속할 수 있다.
+
+> 보통 `_`는 private를 뜻하나, namedtuple은 다른 tuple field와 충돌을 방지하기 위해 사용했을 뿐이다.
+
+```python
+Car = namedtuple('Car', 'color mileage')
+ElectricCar = namedtuple(
+    'ElectricCar', Car._fields + ('charge',)    # Car의 필드에 'charge'를 추가한다.
+)
+
+ElectricCar('red', 1234, 45.0)    # ElectricCar(color='red', mileage=1234, charge=45.0)
+```
+
+---
