@@ -250,7 +250,7 @@ print(*my_car)      # red 3812.4 (튜플 풀기)
 
 ---
 
-### 4.6.1 namedtuple 상속받기
+### 4.6.1 namedtuple 상속하기
 
 `._fields` 메서드를 통해 namedtuple도 상속할 수 있다.
 
@@ -266,3 +266,49 @@ ElectricCar('red', 1234, 45.0)    # ElectricCar(color='red', mileage=1234, charg
 ```
 
 ---
+
+## 4.7 class variable vs instance variable
+
+Python에서는 클래스 변수와 인스턴스 변수를 구별한다.
+
+```python
+class Model:
+    model_type = "CNN"            # class variable
+
+    def __init__(self, name):
+        self.name = name    # instance variable
+
+alexnet = CNN('alexnet')
+alexnet.model_type      # 'CNN'
+mobilenet = CNN('mobilenet')
+```
+
+클래스 자체를 통해 인스턴스 변수에 접근하면 어떻게 될까?
+
+```python
+Model.name     # AttributeError: "type object 'Model' has no attribute 'name'"
+```
+
+오류가 뜬다. 그렇다면 "CNN"에서 "Transformer"로 변경할 수 없을까?
+
+```python
+Model.model_type = "Transformer"
+
+alexnet.model_type      # 'Transformer'
+mobilenet.model_type    # 'Transformer'
+```
+
+변경하자 모든 인스턴스의 `model_type` 클래스 변수가 'Transformer'로 바뀌어 버렸다. alexnet 변수에서만 바꾸면 어떨까?
+
+```python
+alexnet.model_type = "CNN"
+
+alexnet.model_type      # 'CNN'
+alexnet.__class__.model_type    # 'Transformer'
+```
+
+이는 단순히 인스턴스 변수가 클래스 변수을 가리고 있는 것과 마찬가지다. `__class__`를 통해서 기존의 클래스 변수도 여전히 접근할 수 있다. 버그의 원인이 될 수 있기 때문에 언제나 주의해야 한다.
+
+---
+
+
