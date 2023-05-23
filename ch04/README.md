@@ -311,4 +311,137 @@ alexnet.__class__.model_type    # 'Transformer'
 
 ---
 
+## 4.8 instance method, class method, static method,
 
+세 가지 메서드 차이를 알아보자. 클래스 메서드와 정적 메서드는 데코레이터를 이용해서 정의한다.
+
+```python
+# class Model(object)와 동일
+class Model:
+    def method(self):
+        return 'instance method called', self
+
+    @classmethod
+    def classmethod(cls):
+        return 'class method called', cls
+
+    @staticmethod
+    def staticmethod():
+        return 'static method called'
+```
+
+우선 차이점은 매개변수를 보면 파악할 수 있다.
+
+---
+
+### 4.8.1 instance method
+
+인스턴스 메서드가 매개 변수로 받는 `self`는 '메서드가 호출될 때의 `Model` 인스턴스'를 나타낸다.
+
+- `self.__class__`를 통해서 class 자체에 접근할 수도 있다.
+
+```python
+model = Model()
+model.method()     # ('instance method called', <Model instance at 0x11a2>)
+```
+
+`self`를 필요로 하므로 다음과 같이 직접 인스턴스 메서드를 호출하려고 하면 TypeError가 발생한다.
+
+```python
+Model.method()     # TypeError: unbound method method() must be called with Model instance as first argument (got nothing instead)
+```
+
+---
+
+### 4.8.2 class method
+
+클래스 메서드는 매개 변수로 받는 `cls`를 받는다. 따라서 인스턴스 메서드와 다르게 객체 인스턴스를 수정할 수 없다.
+
+- 마찬가지로 `self.__class__`를 통해서 class 자체에 접근할 수는 있다.
+
+```python
+model = Model()
+model.classmethod()     # ('class method called', <class Model at 0x11a2>)
+```
+
+---
+
+### 4.8.3 static method
+
+정적 메서드는 매개 변수를 받지 않는다. 따라서 인스턴스나 클래스 모두 접근할 수 없다.
+
+```python
+model = Model()
+model.staticmethod()     # ('static method called')
+```
+
+---
+
+### 4.8.4 examples
+
+아래와 같은 Model 클래스가 있다고 하자. class method는 예제에서 다양한 모델을 만드는 '펙터리 메서드'로 사용할 수 있다.
+
+```python
+class Model:
+    def __init__(self, layers):
+        self.layers = layers
+
+    def __repr__(self):
+        return f'Model({self.layers})'
+
+    @classmethod
+    def cnn(cls):
+        return cls(['conv', 'pooling', 'fc'])
+
+    @classmethod
+    def transformer(cls):
+        return cls(['encoder', 'decoder'])
+```
+
+다음과 같이 새로운 Model 객체를 손쉽게 만들 수 있다.
+
+```python
+Model.cnn()     # Model(['conv', 'pooling', 'fc'])
+
+Model.transformer()     # Model(['encoder', 'decoder'])
+```
+
+정적 메서드는 `cls`, `self` 모두 접근이 불가능하므로 클래스 혹은 인스턴스 상태에 접근할 수 없었다. 이러한 제약 조건 덕분에 내부 상태를 나도 모르게 바꾸는 불상사를 막을 수 있다.
+
+```python
+# staticmethod example
+class Model:
+    def __init__(self, layers, num_classes):
+        self.layers = layers
+        self.num_classes = num_classes
+        self.input_shape = [32, 32, 3]
+
+    def __repr__(self):
+        return f'Model({self.layers})'
+
+    def get_flops(self):
+        return self.calculate_flops(self.input_shape, self.num_classes)
+
+    @staticmethod
+    def calculate_flops(input_shape, num_classes):
+        total_flops = 0
+
+        # 가상의 CNN 연산 횟수 계산 로직
+        # 각 레이어의 연산 횟수를 계산하여 총 연산 횟수에 더함
+        for layer in range(len(input_shape)):
+            if layer == 0:
+                # 입력 레이어
+                flops = 0
+            elif layer == len(input_shape) - 1:
+                # 출력 레이어
+                flops = input_shape[layer-1] * input_shape[layer] * num_classes
+            else:
+                # 중간 컨볼루션 레이어
+                flops = input_shape[layer-1] * input_shape[layer] * input_shape[layer+1]
+
+            total_flops += flops
+
+        return total_flops
+```
+
+---
