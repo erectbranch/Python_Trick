@@ -26,7 +26,7 @@
 
    > is vs ==, \_\_str\_\_ vs \_\_repr\_\_, copy.deepcopy
 
-   > 사용자 예외 클래스, 추상 클래스(ABC)
+   > 사용자 예외 클래스, 추상 클래스(ABC), namedtuple, instance method vs classmethod vs staticmethod
 
  - [반복문, 이터레이션](https://github.com/erectbranch/Python_Trick/tree/master/ch06)
 
