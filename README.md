@@ -34,6 +34,13 @@
 
    > 딕셔너리 순회, 중첩 딕셔너리 순회, 중첩 딕셔너리 클래스화
 
+- [타이핑, 정적 타입 검사](https://github.com/erectbranch/Python_Trick/tree/master/ch09)
+
+   > mypy, typing.Union, typing.Optional, typing.List/Tuple/Dict, typing.Callable
+
+   > typing.Generator, typing.Iterator, typing.TypeVar
+
+   > 전방 참조 방지(annotations)
 
 </br>
 
